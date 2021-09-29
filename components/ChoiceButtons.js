@@ -11,14 +11,10 @@ const ChoiceButtons = (props) => {
     defaultChoice,
     vertical,
     gap,
+    value,
   } = props;
 
-  const [selectedChoice, setSelectedChoice] = useState(
-    defaultChoice ? defaultChoice : choices[0]
-  );
-
   const handlePress = (choice) => {
-    setSelectedChoice(choice);
     onChoiceSelected(choice);
   };
 
@@ -36,7 +32,7 @@ const ChoiceButtons = (props) => {
       }}
     >
       {choices.map((choice) => {
-        const paintColor = choice === selectedChoice ? selectedColor : color;
+        const paintColor = choice === value ? selectedColor : color;
         return (
           <Button
             style={gapStyles}

@@ -4,7 +4,22 @@ import Button from "./Button";
 
 import StyledSlider from "./StyledSlider";
 import ChoiceButtons from "./ChoiceButtons";
+import { PinModesArray } from "../constants/pins";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+
+import {
+  setPeriod,
+  setPinMode,
+  setUnit,
+  setDutyCycle,
+} from "./../redux/actions/pins";
+
 const PinItem = ({ pin }) => {
+  const dispatch = useDispatch();
+  const pinSettings = useSelector(({ pins }) => {
+    return pins[pin];
+  });
   return (
     <View style={styles.cardContainer}>
       <View style={styles.controlsContainer}>
@@ -16,10 +31,10 @@ const PinItem = ({ pin }) => {
             color="#7D7D7D"
             selectedColor="#3531FF"
             fontSize={13}
-            choices={["ON", "OFF", "PWM"]}
+            choices={PinModesArray}
             gap={2.9}
-            onChoiceSelected={(choice) => console.log(choice)}
-            defaultChoice="OFF"
+            onChoiceSelected={(choice) => dispatch(setPinMode(pin, choice))}
+            value={pinSettings.mode}
           />
         </View>
       </View>
@@ -32,7 +47,9 @@ const PinItem = ({ pin }) => {
 
         <View style={[styles.rowContainer, styles.colGap]}>
           <Text style={[styles.controlsLabel, styles.bold]}>Period:</Text>
-          <Text style={[styles.controlsLabel, styles.rowGap]}>1000</Text>
+          <Text style={[styles.controlsLabel, styles.rowGap]}>
+            {pinSettings.period}
+          </Text>
           <View style={styles.rowGap}>
             <ChoiceButtons
               color="#7D7D7D"
@@ -40,16 +57,37 @@ const PinItem = ({ pin }) => {
               fontSize={11}
               choices={["ms", "us"]}
               gap={2.9}
-              onChoiceSelected={(choice) => console.log(choice)}
+              onChoiceSelected={(choice) => dispatch(setUnit(pin, choice))}
+              value={pinSettings.unit}
             />
           </View>
         </View>
-        <StyledSlider style={[styles.colGap]} height={7} color="#58F7AB" />
+        <StyledSlider
+          value={pinSettings.period}
+          onValueChange={(value) => dispatch(setPeriod(pin, value))}
+          style={[styles.colGap]}
+          maximumValue={pinSettings.periodMax}
+          minimumValue={pinSettings.periodMin}
+          step={pinSettings.periodStep}
+          height={7}
+          color="#58F7AB"
+        />
         <View style={[styles.colGap, styles.rowContainer]}>
           <Text style={styles.controlsLabel}>Duty Cycle:</Text>
-          <Text style={[styles.controlsLabel, styles.rowGap]}>84%</Text>
+          <Text style={[styles.controlsLabel, styles.rowGap]}>
+            {pinSettings.dutyCycle}%
+          </Text>
         </View>
-        <StyledSlider style={[styles.colGap]} height={7} color="#F7D458" />
+        <StyledSlider
+          value={pinSettings.dutyCycle}
+          onValueChange={(value) => dispatch(setDutyCycle(pin, value))}
+          maximumValue={100}
+          minimumValue={0}
+          step={pinSettings.dutyCycleStep}
+          style={[styles.colGap]}
+          height={7}
+          color="#F7D458"
+        />
       </View>
     </View>
   );

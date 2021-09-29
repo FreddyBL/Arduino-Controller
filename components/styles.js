@@ -17,12 +17,3 @@ export const ControlContainer = styled.View`
   flex-direction: column;
   padding: 4px;
 `;
-
-export const Button = styled.TouchableOpacity`
-  color: #fff;
-  background-color: blue;
-  padding: 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
