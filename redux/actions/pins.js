@@ -1,17 +1,60 @@
 import { ActionTypes } from "./../../constants/actionTypes";
-
-export const setPinMode = (pinId, mode) => async (dispatch) => {
+import { sendMessage } from "../../api/wsocket";
+import { commands } from "../../arduino/api";
+import { PinModes } from "../../constants/pins";
+export const setPinMode = (ws, pinId, mode) => async (dispatch) => {
+  switch (mode) {
+    case PinModes.ON: {
+      sendMessage(ws, "arduino/cmd", {
+        pinId,
+        cmd: "on",
+      });
+      break;
+    }
+    case PinModes.OFF: {
+      sendMessage(ws, "arduino/cmd", {
+        pinId,
+        cmd: "off",
+      });
+      break;
+    }
+    case PinModes.PWM: {
+      sendMessage(ws, "arduino/cmd", {
+        pinId,
+        cmd: "pwm",
+      });
+      break;
+    }
+  }
   dispatch({ type: ActionTypes.setPinMode, payload: { pinId, mode } });
 };
 
-export const setPeriod = (pinId, period) => async (dispatch) => {
+export const setPeriod = (ws, pinId, period) => async (dispatch) => {
+  if (ws != null) {
+    sendMessage(ws, "arduino/cmd", {
+      pinId,
+      cmd: "setPeriod",
+      value: period,
+    });
+  }
+
   dispatch({ type: ActionTypes.setPeriod, payload: { pinId, period } });
 };
 
-export const setUnit = (pinId, unit) => async (dispatch) => {
+export const setUnit = (ws, pinId, unit) => async (dispatch) => {
+  sendMessage(ws, "arduino/cmd", {
+    pinId,
+    cmd: "setUnit",
+    value: unit,
+  });
   dispatch({ type: ActionTypes.setUnit, payload: { pinId, unit } });
 };
 
-export const setDutyCycle = (pinId, dutyCycle) => async (dispatch) => {
+export const setDutyCycle = (ws, pinId, dutyCycle) => async (dispatch) => {
+  sendMessage(ws, "arduino/cmd", {
+    pinId,
+    cmd: "setDutyCycle",
+    value: dutyCycle,
+  });
   dispatch({ type: ActionTypes.setDutyCycle, payload: { pinId, dutyCycle } });
 };

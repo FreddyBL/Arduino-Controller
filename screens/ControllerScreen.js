@@ -14,7 +14,7 @@ const pins = [
     id: 2,
   },
 ];
-const Main = () => {
+const ControllerScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
@@ -34,7 +34,7 @@ const Main = () => {
   );
 };
 
-export default Main;
+export default ControllerScreen;
 
 const styles = StyleSheet.create({
   container: {

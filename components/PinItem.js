@@ -14,8 +14,10 @@ import {
   setUnit,
   setDutyCycle,
 } from "./../redux/actions/pins";
+import { useGlobalContext } from "../GlobalContext";
 
 const PinItem = ({ pin }) => {
+  const { ws } = useGlobalContext();
   const dispatch = useDispatch();
   const pinSettings = useSelector(({ pins }) => {
     return pins[pin];
@@ -33,7 +35,7 @@ const PinItem = ({ pin }) => {
             fontSize={13}
             choices={PinModesArray}
             gap={2.9}
-            onChoiceSelected={(choice) => dispatch(setPinMode(pin, choice))}
+            onChoiceSelected={(choice) => dispatch(setPinMode(ws, pin, choice))}
             value={pinSettings.mode}
           />
         </View>
@@ -57,14 +59,14 @@ const PinItem = ({ pin }) => {
               fontSize={11}
               choices={["ms", "us"]}
               gap={2.9}
-              onChoiceSelected={(choice) => dispatch(setUnit(pin, choice))}
+              onChoiceSelected={(choice) => dispatch(setUnit(ws, pin, choice))}
               value={pinSettings.unit}
             />
           </View>
         </View>
         <StyledSlider
           value={pinSettings.period}
-          onValueChange={(value) => dispatch(setPeriod(pin, value))}
+          onValueChange={(value) => dispatch(setPeriod(ws, pin, value))}
           style={[styles.colGap]}
           maximumValue={pinSettings.periodMax}
           minimumValue={pinSettings.periodMin}
@@ -80,7 +82,7 @@ const PinItem = ({ pin }) => {
         </View>
         <StyledSlider
           value={pinSettings.dutyCycle}
-          onValueChange={(value) => dispatch(setDutyCycle(pin, value))}
+          onValueChange={(value) => dispatch(setDutyCycle(ws, pin, value))}
           maximumValue={100}
           minimumValue={0}
           step={pinSettings.dutyCycleStep}
