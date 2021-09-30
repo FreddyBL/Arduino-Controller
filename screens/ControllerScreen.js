@@ -1,35 +1,80 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, Text, View, FlatList } from "react-native";
-
+import { useSelector } from "react-redux";
 import PinItem from "../components/PinItem";
+import { useNavigation } from "@react-navigation/core";
+import { useGlobalContext } from "../GlobalContext";
 
 const pins = [
   {
-    id: 0,
+    pinId: 0,
   },
   {
-    id: 1,
+    pinId: 1,
   },
   {
-    id: 2,
+    pinId: 2,
+  },
+  {
+    pinId: 3,
+  },
+  {
+    pinId: 4,
+  },
+  {
+    pinId: 5,
+  },
+  {
+    pinId: 6,
+  },
+  {
+    pinId: 7,
+  },
+  {
+    pinId: 8,
+  },
+  {
+    pinId: 9,
+  },
+  {
+    pinId: 10,
+  },
+  {
+    pinId: 11,
   },
 ];
 const ControllerScreen = () => {
+  const { isConnected } = useGlobalContext();
+  const navigator = useNavigation();
+  let listComponent = null;
+  if (!isConnected) {
+    listComponent = <View />;
+  } else {
+    listComponent = (
+      <FlatList
+        data={pins}
+        renderItem={({ item, idx }) => {
+          return <PinItem pin={item.pinId} />;
+        }}
+        keyExtractor={(pin) => pin.pinId.toString()}
+      />
+    );
+  }
+  useEffect(() => {
+    if (isConnected) {
+      navigator.navigate("ControllerScreen");
+    } else {
+      navigator.navigate("ConnectScreen");
+    }
+  }, [isConnected]);
+
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
         <Text style={styles.headerTxt}>Pins:</Text>
         <Text style={styles.statusTxt}>CONNECTED</Text>
       </View>
-      <View style={styles.pinsContainer}>
-        <FlatList
-          data={pins}
-          renderItem={({ item }) => {
-            return <PinItem pin={item.id} />;
-          }}
-          keyExtractor={(pin) => pin.id.toString()}
-        />
-      </View>
+      <View style={styles.pinsContainer}>{listComponent}</View>
     </View>
   );
 };

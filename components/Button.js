@@ -27,7 +27,7 @@ export default function Button({ style, title, color, fsize, onPress }) {
   return (
     <TouchableOpacity style={style} onPress={onPress}>
       <Container style={style} color={color}>
-        <BtnTxt fsize={fsize ? fsize : 16}>{title}</BtnTxt>
+        <BtnTxt fsize={fsize ? fsize : "16px"}>{title}</BtnTxt>
       </Container>
     </TouchableOpacity>
   );

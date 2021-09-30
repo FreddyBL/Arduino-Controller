@@ -10,6 +10,7 @@ const initialState = [
     unit: UnitTypes.ms,
     dutyCycle: 50,
     dutyCycleStep: 1,
+    pinId: 0,
   },
   {
     mode: PinModes.OFF,
@@ -23,12 +24,12 @@ const initialState = [
   },
   {
     mode: PinModes.PWM,
-    period: 700,
+    period: 500,
     periodMin: 0,
     periodMax: 2000,
     periodStep: 1,
     unit: UnitTypes.us,
-    dutyCycle: 45,
+    dutyCycle: 50,
     dutyCycleStep: 1,
   },
 ];
@@ -74,6 +75,9 @@ const reducer = (pinsState = initialState, action) => {
         }
         return pin;
       });
+    }
+    case ActionTypes.setState: {
+      return action.payload.state;
     }
     default:
       return pinsState;

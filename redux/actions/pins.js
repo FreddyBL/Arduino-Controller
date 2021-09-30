@@ -3,29 +3,10 @@ import { sendMessage } from "../../api/wsocket";
 import { commands } from "../../arduino/api";
 import { PinModes } from "../../constants/pins";
 export const setPinMode = (ws, pinId, mode) => async (dispatch) => {
-  switch (mode) {
-    case PinModes.ON: {
-      sendMessage(ws, "arduino/cmd", {
-        pinId,
-        cmd: "on",
-      });
-      break;
-    }
-    case PinModes.OFF: {
-      sendMessage(ws, "arduino/cmd", {
-        pinId,
-        cmd: "off",
-      });
-      break;
-    }
-    case PinModes.PWM: {
-      sendMessage(ws, "arduino/cmd", {
-        pinId,
-        cmd: "pwm",
-      });
-      break;
-    }
-  }
+  sendMessage(ws, "arduino/cmd", {
+    pinId,
+    cmd: mode,
+  });
   dispatch({ type: ActionTypes.setPinMode, payload: { pinId, mode } });
 };
 
@@ -57,4 +38,8 @@ export const setDutyCycle = (ws, pinId, dutyCycle) => async (dispatch) => {
     value: dutyCycle,
   });
   dispatch({ type: ActionTypes.setDutyCycle, payload: { pinId, dutyCycle } });
+};
+
+export const setState = (state) => async (dispatch) => {
+  dispatch({ type: ActionTypes.setState, payload: { state } });
 };

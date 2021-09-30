@@ -1,32 +1,72 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext, useEffect } from "react";
 import aJSON_Parse from "async-json-parse";
 export const GlobalContext = createContext();
 import { sendMessage } from "./api/wsocket";
+import { onMessageReceived } from "./api/wsocket";
+import { useDispatch } from "react-redux";
+import { setState } from "./redux/actions/pins";
 export const useGlobalContext = () => {
   return useContext(GlobalContext);
 };
 
+const updateInterval = 5000;
 export const GlobalProvider = ({ children }) => {
-  const [ws, setWs] = useState(() => {
-    const wsocket = new WebSocket("ws://192.168.0.100:3016");
+  const [isConnected, setIsConnected] = useState(false);
+  const [ws, setWs] = useState(null);
+  const [arduinoCOM, setArduinoCOM] = useState(null);
 
-    wsocket.onopen = (event) => {
-      console.log("[Client] Successfully connected to Node.js server.");
-      sendMessage(wsocket, "arduino/req_listports", {});
-    };
+  const dispatch = useDispatch();
+
+  const wsocketConnect = () => {
+    console.log("called");
+    const wsocket = new WebSocket("ws://192.168.0.100:3016");
+    let isMounted = true;
     wsocket.onclose = (event) => {
       console.log("[Client] Lost connection to Node.js server");
+      setIsConnected(false);
+      setTimeout(function () {
+        wsocketConnect();
+      }, 5000);
+    };
+    wsocket.onopen = (event) => {
+      console.log("[Client] Successfully connected to Node.js server.");
+      setIsConnected(true);
     };
     wsocket.onmessage = ({ data }) => {
       aJSON_Parse(data).then((json) => {
         const { type, payload } = json;
-        onMessageReceived(wsocket, type, payload);
+        switch (type) {
+          case "initialSettings": {
+            let pinsState = [];
+            for (let i = 0; i < payload.length; i++) {
+              pinsState.push(payload[i].state);
+            }
+            dispatch(setState(pinsState));
+            break;
+          }
+          case "selectCOMPort": {
+            break;
+          }
+        }
       });
     };
-    return wsocket;
-  });
-  const [arduinoCOM, setArduinoCOM] = useState(null);
-  const values = { ws, setWs, arduinoCOM, setArduinoCOM };
+    setWs(wsocket);
+  };
+  useEffect(() => {
+    wsocketConnect();
+    return () => {
+      if (ws !== null) {
+        ws.close();
+      }
+    };
+  }, []);
+  const values = {
+    ws,
+    setWs,
+    arduinoCOM,
+    setArduinoCOM,
+    isConnected,
+  };
   return (
     <GlobalContext.Provider value={values}>{children}</GlobalContext.Provider>
   );

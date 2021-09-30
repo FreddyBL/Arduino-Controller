@@ -4,4 +4,5 @@ export const ActionTypes = {
   setDutyCycle: "SET_DUTY_CYCLE",
   setUnit: "SET_UNIT",
   getConfig: "GET_CONFIG",
+  setState: "SET_STATE",
 };

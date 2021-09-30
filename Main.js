@@ -6,22 +6,38 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { sendMessage, onMessageReceived } from "./api/wsocket";
 import { GlobalProvider, useGlobalContext } from "./GlobalContext";
+import { useNavigation } from "@react-navigation/core";
+import ConnectScreen from "./screens/ConnectScreen";
 const Stack = createNativeStackNavigator();
 
 export default function Main() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName="ConnectScreen">
         <Stack.Screen
-          name="Controller"
+          name="ControllerScreen"
           options={{
             title: "Android Controller",
             headerStyle: {
               backgroundColor: "#0D1828",
             },
             headerTintColor: "#fff",
+            headerLeft: () => null,
+            headerRight: () => null,
           }}
           component={ControllerScreen}
+        />
+        <Stack.Screen
+          name="ConnectScreen"
+          options={{
+            title: "Android Controller",
+            headerStyle: {
+              backgroundColor: "#0D1828",
+            },
+            headerTintColor: "#fff",
+            headerLeft: null,
+          }}
+          component={ConnectScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>
