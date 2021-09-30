@@ -10,7 +10,7 @@ import * as api from "./api/http.js";
 export const useGlobalContext = () => {
   return useContext(GlobalContext);
 };
-import { SERVER_IP, PORT } from "@env";
+import { SERVER_IP, WSOCKET_PORT } from "@env";
 import { useFocusEffect } from "@react-navigation/core";
 
 const updateInterval = 5000;
@@ -23,7 +23,7 @@ export const GlobalProvider = ({ children }) => {
   const dispatch = useDispatch();
 
   const wsocketConnect = () => {
-    const wsocket = new WebSocket(`ws://${SERVER_IP}:${PORT}`);
+    const wsocket = new WebSocket(`ws://${SERVER_IP}:${WSOCKET_PORT}`);
     let isMounted = true;
     wsocket.onclose = (event) => {
       console.log("[Client] Lost connection to Node.js server");
