@@ -5,17 +5,20 @@ import { sendMessage } from "./api/wsocket";
 import { onMessageReceived } from "./api/wsocket";
 import { useDispatch } from "react-redux";
 import { setState } from "./redux/actions/pins";
+import * as api from "./api/http.js";
+
 export const useGlobalContext = () => {
   return useContext(GlobalContext);
 };
 import { SERVER_IP, PORT } from "@env";
+import { useFocusEffect } from "@react-navigation/core";
 
 const updateInterval = 5000;
 export const GlobalProvider = ({ children }) => {
   const [isConnected, setIsConnected] = useState(false);
   const [ws, setWs] = useState(null);
   const [arduinoCOM, setArduinoCOM] = useState(null);
-
+  const [isArduinoConnected, setIsArduinoConnected] = useState(false);
   const dispatch = useDispatch();
 
   const wsocketConnect = () => {
@@ -31,6 +34,7 @@ export const GlobalProvider = ({ children }) => {
     wsocket.onopen = (event) => {
       console.log("[Client] Successfully connected to Node.js server.");
       setIsConnected(true);
+      fetchArduinoStatus();
     };
     wsocket.onmessage = ({ data }) => {
       aJSON_Parse(data).then((json) => {
@@ -47,6 +51,9 @@ export const GlobalProvider = ({ children }) => {
           case "selectCOMPort": {
             break;
           }
+          case "arduino-closed": {
+            setIsArduinoConnected(false);
+          }
         }
       });
     };
@@ -60,12 +67,42 @@ export const GlobalProvider = ({ children }) => {
       }
     };
   }, []);
+  const fetchArduinoStatus = async () => {
+    try {
+      const response = await api.isArduinoConnected();
+      const value = response.data.value;
+      setIsArduinoConnected(value);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const connectToArduino = async (port) => {
+    try {
+      const response = await api.arduinoConnect(port);
+      const success = response.data.success;
+      if (success) {
+        setIsArduinoConnected(true);
+        return true;
+      }
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    fetchArduinoStatus();
+  }, [isConnected]);
+
   const values = {
     ws,
     setWs,
     arduinoCOM,
     setArduinoCOM,
     isConnected,
+    isArduinoConnected,
+    connectToArduino,
   };
   return (
     <GlobalContext.Provider value={values}>{children}</GlobalContext.Provider>

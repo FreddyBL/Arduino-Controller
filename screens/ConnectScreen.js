@@ -6,13 +6,19 @@ import { useNavigation } from "@react-navigation/core";
 import Button from "../components/Button";
 import serverDownSVG from "../images/server-down.svg";
 import { Icon } from "react-native-elements";
+import { isArduinoConnected } from "./../api/http";
 const ConnectScreen = () => {
-  const { isConnected, retryConnection } = useGlobalContext();
+  const { isConnected, isArduinoConnected, retryConnection } =
+    useGlobalContext();
   const navigator = useNavigation();
   const [statusMsg, setStatusMsg] = useState("");
   useEffect(() => {
     if (isConnected) {
-      navigator.navigate("ControllerScreen");
+      if (isArduinoConnected) {
+        navigator.navigate("ControllerScreen");
+      } else {
+        navigator.navigate("ArduinoConnectScreen");
+      }
     } else {
       navigator.navigate("ConnectScreen");
     }

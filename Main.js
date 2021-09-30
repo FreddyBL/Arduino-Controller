@@ -8,6 +8,7 @@ import { sendMessage, onMessageReceived } from "./api/wsocket";
 import { GlobalProvider, useGlobalContext } from "./GlobalContext";
 import { useNavigation } from "@react-navigation/core";
 import ConnectScreen from "./screens/ConnectScreen";
+import ArduinoConnectScreen from "./screens/ArduinoConnectScreen";
 const Stack = createNativeStackNavigator();
 
 export default function Main() {
@@ -30,7 +31,7 @@ export default function Main() {
         <Stack.Screen
           name="ConnectScreen"
           options={{
-            title: "Android Controller",
+            title: "Android Controller: Offline",
             headerStyle: {
               backgroundColor: "#0D1828",
             },
@@ -38,6 +39,18 @@ export default function Main() {
             headerLeft: null,
           }}
           component={ConnectScreen}
+        />
+        <Stack.Screen
+          name="ArduinoConnectScreen"
+          options={{
+            title: "Connect to Arduno",
+            headerStyle: {
+              backgroundColor: "#0D1828",
+            },
+            headerTintColor: "#fff",
+            headerLeft: null,
+          }}
+          component={ArduinoConnectScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>
