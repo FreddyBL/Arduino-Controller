@@ -8,6 +8,7 @@ import { setState } from "./redux/actions/pins";
 export const useGlobalContext = () => {
   return useContext(GlobalContext);
 };
+import { SERVER_IP, PORT } from "@env";
 
 const updateInterval = 5000;
 export const GlobalProvider = ({ children }) => {
@@ -18,8 +19,7 @@ export const GlobalProvider = ({ children }) => {
   const dispatch = useDispatch();
 
   const wsocketConnect = () => {
-    console.log("called");
-    const wsocket = new WebSocket("ws://192.168.0.100:3016");
+    const wsocket = new WebSocket(`ws://${SERVER_IP}:${PORT}`);
     let isMounted = true;
     wsocket.onclose = (event) => {
       console.log("[Client] Lost connection to Node.js server");
