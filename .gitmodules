@@ -1,0 +1,3 @@
+[submodule "android-controller-server"]
+	path = android-controller-server
+	url = https://github.com/FreddyBL/android-controller-server
