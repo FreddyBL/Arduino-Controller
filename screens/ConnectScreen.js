@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, FlatList, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  Image,
+  ActivityIndicator,
+} from "react-native";
 import { useSelector } from "react-redux";
 import { useGlobalContext } from "../GlobalContext";
 import { useNavigation } from "@react-navigation/core";
@@ -28,7 +35,7 @@ const ConnectScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
-        <Text style={styles.headerTxt}>Server's Down</Text>
+        <Text style={{ fontSize: 20, fontWeight: "bold" }}>Server's Down</Text>
       </View>
       <Icon
         name="exclamation-triangle"
@@ -37,9 +44,9 @@ const ConnectScreen = () => {
         size={120}
       />
       <Text style={styles.statusTxt}>
-        Error: Server seems to be offline at the moment.
+        Error: Could not establish a connection to server.
       </Text>
-      <Text style={styles.statusTxt}>Retrying to connnect...</Text>
+      <ActivityIndicator size="large" color="#495558" />
     </View>
   );
 };
@@ -49,7 +56,7 @@ export default ConnectScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#D2CECE",
+    backgroundColor: "#ffffff",
     height: "100%",
     display: "flex",
     flexDirection: "column",
@@ -64,6 +71,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
+    marginBottom: 50,
   },
   pinsContainer: {
     flex: 1,
@@ -82,6 +90,7 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto",
     fontSize: 18,
     color: "#ad5645",
+    marginTop: 40,
     fontWeight: "normal",
     marginVertical: 10,
   },

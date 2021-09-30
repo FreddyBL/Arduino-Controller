@@ -18,8 +18,12 @@ import { Button } from "react-native-elements";
 import { ListItem, Avatar } from "react-native-elements";
 
 const ArduinoConnectScreen = () => {
-  const { isConnected, isArduinoConnected, connectToArduino, retryConnection } =
-    useGlobalContext();
+  const {
+    isConnected,
+    isArduinoConnected,
+    connectToArduino,
+    isConnectingToArduino,
+  } = useGlobalContext();
   const navigator = useNavigation();
   const [statusMsg, setStatusMsg] = useState("");
   const [isConnecting, setIsConnecting] = useState(false);
@@ -46,21 +50,13 @@ const ArduinoConnectScreen = () => {
   }, []);
 
   const handleConnect = (port) => {
-    setStatusMsg("Connecting...");
-    setIsConnecting(true);
     const status = connectToArduino(port);
-    if (!status) {
-      setStatusMsg("Could not establish a connection to Arduino.");
-    } else {
-      setIsConnecting(false);
-      setPorts([]);
-    }
   };
 
   const content =
     ports.length > 0 ? (
       ports.map((item, i) => (
-        <ListItem key={i} bottomDivider>
+        <ListItem style={{ marginBottom: 20 }} key={i} bottomDivider>
           <ListItem.Content>
             <ListItem.Title>{`Manufacturer: ${item.manufacturer}`}</ListItem.Title>
             <ListItem.Subtitle>{`PORT: ${item.path}`}</ListItem.Subtitle>
@@ -75,24 +71,27 @@ const ArduinoConnectScreen = () => {
         </ListItem>
       ))
     ) : (
-      <Text>
+      <Text style={{ marginBottom: 20 }}>
         No serial ports found on the server. Make sure an Arduino is connected.
       </Text>
     );
   return (
     <View style={styles.container}>
-      <Text style={{ marginBottom: 20, fontSize: 25 }} h2>
+      <Text style={{ marginBottom: 20, fontSize: 15, fontFamily: "Roboto" }} h2>
         Select a port:{" "}
       </Text>
       {content}
-      <Text>{statusMsg}</Text>
-      {isConnecting && <ActivityIndicator size="small" color="#0000ff" />}
+
       <Button
         onPress={() => {
           fetchCOMPorts();
         }}
         title="Reload"
       />
+      <Text style={{ marginTop: 20 }}>{statusMsg}</Text>
+      {isConnectingToArduino && (
+        <ActivityIndicator size="small" color="#0000ff" />
+      )}
     </View>
   );
 };
@@ -102,7 +101,7 @@ export default ArduinoConnectScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#D2CECE",
+    backgroundColor: "#ffffff",
     height: "100%",
     display: "flex",
     flexDirection: "column",

@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import PinItem from "../components/PinItem";
 import { useNavigation } from "@react-navigation/core";
 import { useGlobalContext } from "../GlobalContext";
-
+import { BackHandler } from "react-native";
 const pins = [
   {
     pinId: 0,
@@ -84,7 +84,7 @@ export default ControllerScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#D2CECE",
+    backgroundColor: "white",
     height: "100%",
     display: "flex",
     flexDirection: "column",

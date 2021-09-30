@@ -19,6 +19,7 @@ export const GlobalProvider = ({ children }) => {
   const [ws, setWs] = useState(null);
   const [arduinoCOM, setArduinoCOM] = useState(null);
   const [isArduinoConnected, setIsArduinoConnected] = useState(false);
+  const [isConnectingToArduino, setIsConnectingToArduino] = useState(false);
   const dispatch = useDispatch();
 
   const wsocketConnect = () => {
@@ -81,14 +82,16 @@ export const GlobalProvider = ({ children }) => {
     try {
       const response = await api.arduinoConnect(port);
       const success = response.data.success;
+
+      setIsConnectingToArduino(false);
       if (success) {
         setIsArduinoConnected(true);
         return true;
       }
     } catch (error) {
       console.log(error);
-      return false;
     }
+    return false;
   };
 
   useEffect(() => {
@@ -103,6 +106,8 @@ export const GlobalProvider = ({ children }) => {
     isConnected,
     isArduinoConnected,
     connectToArduino,
+    isConnectingToArduino,
+    setIsConnectingToArduino,
   };
   return (
     <GlobalContext.Provider value={values}>{children}</GlobalContext.Provider>

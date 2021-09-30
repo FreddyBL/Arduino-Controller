@@ -10,6 +10,7 @@ import { useNavigation } from "@react-navigation/core";
 import ConnectScreen from "./screens/ConnectScreen";
 import ArduinoConnectScreen from "./screens/ArduinoConnectScreen";
 const Stack = createNativeStackNavigator();
+import { BackHandler } from "react-native";
 
 export default function Main() {
   return (
@@ -25,6 +26,7 @@ export default function Main() {
             headerTintColor: "#fff",
             headerLeft: () => null,
             headerRight: () => null,
+            headerLeft: () => <View />,
           }}
           component={ControllerScreen}
         />
@@ -36,19 +38,20 @@ export default function Main() {
               backgroundColor: "#0D1828",
             },
             headerTintColor: "#fff",
-            headerLeft: null,
+            headerLeft: () => <View />,
           }}
           component={ConnectScreen}
         />
         <Stack.Screen
           name="ArduinoConnectScreen"
           options={{
-            title: "Connect to Arduno",
+            title: "Connect to Arduino",
             headerStyle: {
               backgroundColor: "#0D1828",
             },
             headerTintColor: "#fff",
-            headerLeft: null,
+            headerLeft: () => <View />,
+            headerShown: true,
           }}
           component={ArduinoConnectScreen}
         />
